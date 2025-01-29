@@ -82,11 +82,11 @@
   border-radius: 5px;
   font-family: Arial, sans-serif;
 }
+
 a {
   color: inherit; /* blue colors for links too */
   text-decoration: inherit; /* no underline */
 }
-
   </style>
  <link rel="preload" as="image" href="fish.png">
  <link rel="preload" as="image" href="shrimp.png">
@@ -201,27 +201,39 @@ fullscreenBtn.addEventListener("click", toggleFullscreen);
 
 // 切換全螢幕模式
 function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    // 進入全螢幕
-    document.documentElement.requestFullscreen().then(() => {
-      fullscreenBtn.innerText = "❌ 退出全螢幕";
-    }).catch(err => {
-      console.log(`無法進入全螢幕模式: ${err.message}`);
-    });
+  const elem = document.documentElement; // 整個網頁進入全螢幕
+  
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    // 進入全螢幕模式
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { // for iOS Safari
+      elem.webkitRequestFullscreen();
+    }
+    fullscreenBtn.innerText = "❌ 退出全螢幕";
   } else {
-    // 退出全螢幕
-    document.exitFullscreen().then(() => {
-      fullscreenBtn.innerText = "🔳 全螢幕";
-    });
+    // 退出全螢幕模式
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { // for iOS Safari
+      document.webkitExitFullscreen();
+    }
+    fullscreenBtn.innerText = "🔳 全螢幕";
   }
 }
 
 // 監聽全螢幕變化，動態更新按鈕文字
-document.addEventListener("fullscreenchange", () => {
-  if (!document.fullscreenElement) {
+document.addEventListener("fullscreenchange", updateFullscreenButton);
+document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
+
+function updateFullscreenButton() {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
     fullscreenBtn.innerText = "🔳 全螢幕";
+  } else {
+    fullscreenBtn.innerText = "❌ 退出全螢幕";
   }
-});
+}
+
 
   </script>
 </body>
