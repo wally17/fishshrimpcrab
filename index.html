@@ -82,7 +82,10 @@
   border-radius: 5px;
   font-family: Arial, sans-serif;
 }
-
+a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
 
   </style>
  <link rel="preload" as="image" href="fish.png">
@@ -105,7 +108,7 @@
   <button onclick="rollDice()">擲骰</button>
  <button id="fullscreen-btn">🔳 全螢幕</button>
  <div id="credit">
-  Made with ❤️ by Wally & ChatGPT
+  <a href=https://github.com/wally17/fishshrimpcrab/blob/main/README.md>Made with ❤️ by Wally & ChatGPT</a>
 </div>
   <!-- 加入音效 -->
   <audio id="roll-sound" src="roll-sound.mp3" preload="auto"></audio>
