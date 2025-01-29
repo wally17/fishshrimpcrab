@@ -52,6 +52,25 @@
     button:hover {
       background-color: #a00000;
     }
+	
+	#fullscreen-btn {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  padding: 10px 15px;
+  font-size: 18px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#fullscreen-btn:hover {
+  background-color: #0056b3;
+}
+
   </style>
  <link rel="preload" as="image" href="fish.png">
  <link rel="preload" as="image" href="shrimp.png">
@@ -71,7 +90,7 @@
     <div class="dice"><img src="placeholder.png" alt="骰子"></div>
   </div>
   <button onclick="rollDice()">擲骰</button>
-
+ <button id="fullscreen-btn">🔳 全螢幕</button>
   <!-- 加入音效 -->
   <audio id="roll-sound" src="roll-sound.mp3" preload="auto"></audio>
   <audio id="stop-sound" src="stop-sound.mp3" preload="auto"></audio>
@@ -154,6 +173,37 @@
       stopSound.currentTime = 0; // 重置音效播放時間
       stopSound.play(); // 播放音效
     }
+  
+  // 獲取按鈕元素
+const fullscreenBtn = document.getElementById("fullscreen-btn");
+
+// 監聽按鈕點擊事件
+fullscreenBtn.addEventListener("click", toggleFullscreen);
+
+// 切換全螢幕模式
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    // 進入全螢幕
+    document.documentElement.requestFullscreen().then(() => {
+      fullscreenBtn.innerText = "❌ 退出全螢幕";
+    }).catch(err => {
+      console.log(`無法進入全螢幕模式: ${err.message}`);
+    });
+  } else {
+    // 退出全螢幕
+    document.exitFullscreen().then(() => {
+      fullscreenBtn.innerText = "🔳 全螢幕";
+    });
+  }
+}
+
+// 監聽全螢幕變化，動態更新按鈕文字
+document.addEventListener("fullscreenchange", () => {
+  if (!document.fullscreenElement) {
+    fullscreenBtn.innerText = "🔳 全螢幕";
+  }
+});
+
   </script>
 </body>
 </html>
