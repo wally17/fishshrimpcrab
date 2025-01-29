@@ -53,7 +53,7 @@
       background-color: #a00000;
     }
 	
-	#fullscreen-btn {
+#fullscreen-btn {
   position: fixed;
   bottom: 10px;
   right: 10px;
@@ -70,6 +70,19 @@
 #fullscreen-btn:hover {
   background-color: #0056b3;
 }
+
+#credit {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  font-size: 14px;
+  color: white;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+}
+
 
   </style>
  <link rel="preload" as="image" href="fish.png">
@@ -91,6 +104,9 @@
   </div>
   <button onclick="rollDice()">擲骰</button>
  <button id="fullscreen-btn">🔳 全螢幕</button>
+ <div id="credit">
+  Made with ❤️ by Wally & ChatGPT
+</div>
   <!-- 加入音效 -->
   <audio id="roll-sound" src="roll-sound.mp3" preload="auto"></audio>
   <audio id="stop-sound" src="stop-sound.mp3" preload="auto"></audio>
