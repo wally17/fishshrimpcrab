@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>魚蝦蟹遊戲</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      transition: background-color 0.3s ease; /* 平滑背景顏色過渡 */
+    }
+    h1 {
+      color: #333;
+      margin-top: 20px;
+    }
+    #dice-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .dice {
+      width: 100px;
+      height: 100px;
+      margin: 0 10px;
+      background-color: #fff;
+      border: 2px solid #999999;
+      border-radius: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .dice img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #d00000;
+      color: white;
+      font-size: 18px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    button:hover {
+      background-color: #a00000;
+    }
+  </style>
+ <link rel="preload" as="image" href="fish.png">
+ <link rel="preload" as="image" href="shrimp.png">
+ <link rel="preload" as="image" href="crab.png">
+ <link rel="preload" as="image" href="deer.png">
+ <link rel="preload" as="image" href="gourd.png">
+ <link rel="preload" as="image" href="chicken.png">
+
+</head>
+<body>
+  <h1> </h1>
+  <img src="title.png" width=350>
+  
+  <div id="dice-container">
+    <div class="dice"><img src="placeholder.png" alt="骰子"></div>
+    <div class="dice"><img src="placeholder.png" alt="骰子"></div>
+    <div class="dice"><img src="placeholder.png" alt="骰子"></div>
+  </div>
+  <button onclick="rollDice()">擲骰</button>
+
+  <!-- 加入音效 -->
+  <audio id="roll-sound" src="roll-sound.mp3" preload="auto"></audio>
+  <audio id="stop-sound" src="stop-sound.mp3" preload="auto"></audio>
+
+  <script>
+    // 定義魚蝦蟹選項及對應圖片
+    const options = {
+      "魚": "fish.png",
+      "蝦": "shrimp.png",
+      "蟹": "crab.png",
+      "雞": "chicken.png",
+      "葫蘆": "gourd.png",
+      "鹿": "deer.png"
+    };
+
+    const diceContainer = document.querySelectorAll(".dice img");
+    const rollSound = document.getElementById("roll-sound"); // 跳動音效
+    const stopSound = document.getElementById("stop-sound"); // 停止音效
+
+    function rollDice() {
+      const totalFrames = Math.floor(Math.random() * 11) + 20; // 隨機跳動次數 20 到 30
+      let currentFrame = 0;
+      let intervalTime = 100; // 起始跳動間隔
+
+      // 切換背景顏色為黑色
+      document.body.style.backgroundColor = "#000";
+
+      function updateDice() {
+        // 播放跳動音效
+        playRollSound();
+
+        // 隨機顯示過渡結果
+        diceContainer.forEach(dice => {
+          const randomOption = Object.keys(options)[Math.floor(Math.random() * 6)];
+          dice.src = options[randomOption];
+          dice.alt = randomOption;
+        });
+
+        currentFrame++;
+
+        // 若到最後 5~10 次，讓間隔隨機減慢
+        if (currentFrame >= totalFrames - Math.floor(Math.random() * 6) - 5) {
+          intervalTime += Math.floor(Math.random() * 100) + 100; // 隨機增加 50~150 毫秒
+        }
+
+        // 停止條件
+        if (currentFrame === totalFrames) {
+          displayFinalResult(); // 顯示最終結果
+
+          // 延遲背景恢復與停止音效
+          const delay = Math.floor(Math.random() * 500) + 1000; // 隨機延遲 50~100 毫秒
+          setTimeout(() => {
+            playStopSound(); // 播放停止音效
+            document.body.style.backgroundColor = "#ffffff"; // 恢復原背景顏色
+          }, delay);
+        } else {
+          setTimeout(updateDice, intervalTime); // 更新下一跳
+        }
+      }
+
+      // 開始更新骰子
+      updateDice();
+    }
+
+    function displayFinalResult() {
+      // 顯示最終結果
+      diceContainer.forEach(dice => {
+        const result = Object.keys(options)[Math.floor(Math.random() * 6)];
+        dice.src = options[result];
+        dice.alt = result;
+      });
+    }
+
+    function playRollSound() {
+      rollSound.currentTime = 0; // 重置音效播放時間
+      rollSound.play(); // 播放音效
+    }
+
+    function playStopSound() {
+      stopSound.currentTime = 0; // 重置音效播放時間
+      stopSound.play(); // 播放音效
+    }
+  </script>
+</body>
+</html>
