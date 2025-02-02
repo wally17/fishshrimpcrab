@@ -28,7 +28,7 @@
       margin: 0 10px;
       background-color: #fff;
       border: 2px solid #999999;
-      border-radius: 15px;
+      border-radius: 16px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -130,49 +130,56 @@ a {
     const stopSound = document.getElementById("stop-sound"); // 停止音效
 
     function rollDice() {
-      const totalFrames = Math.floor(Math.random() * 11) + 20; // 隨機跳動次數 20 到 30
-      let currentFrame = 0;
-      let intervalTime = 100; // 起始跳動間隔
+  const totalFrames = Math.floor(Math.random() * 11) + 20; // 隨機跳動次數 20 到 30
+  let currentFrame = 0;
+  let intervalTime = 100; // 起始跳動間隔
 
-      // 切換背景顏色為黑色
-      document.body.style.backgroundColor = "#000";
+  // **🔴 禁用按鈕**
+  const rollButton = document.querySelector("button[onclick='rollDice()']");
+  rollButton.disabled = true;
+  rollButton.style.opacity = "0.5"; // 讓按鈕變半透明，提示不能點擊
 
-      function updateDice() {
-        // 播放跳動音效
-        playRollSound();
+  // **切換背景顏色為黑色**
+  document.body.style.backgroundColor = "#000";
 
-        // 隨機顯示過渡結果
-        diceContainer.forEach(dice => {
-          const randomOption = Object.keys(options)[Math.floor(Math.random() * 6)];
-          dice.src = options[randomOption];
-          dice.alt = randomOption;
-        });
+  function updateDice() {
+    // 播放跳動音效
+    playRollSound();
 
-        currentFrame++;
+    // 隨機顯示過渡結果
+    diceContainer.forEach(dice => {
+      const randomOption = Object.keys(options)[Math.floor(Math.random() * 6)];
+      dice.src = options[randomOption];
+      dice.alt = randomOption;
+    });
 
-        // 若到最後 5~10 次，讓間隔隨機減慢
-        if (currentFrame >= totalFrames - Math.floor(Math.random() * 6) - 5) {
-          intervalTime += Math.floor(Math.random() * 100) + 100; // 隨機增加 50~150 毫秒
-        }
+    currentFrame++;
 
-        // 停止條件
-        if (currentFrame === totalFrames) {
-          displayFinalResult(); // 顯示最終結果
-
-          // 延遲背景恢復與停止音效
-          const delay = Math.floor(Math.random() * 500) + 1000; // 隨機延遲 50~100 毫秒
-          setTimeout(() => {
-            playStopSound(); // 播放停止音效
-            document.body.style.backgroundColor = "#ffffff"; // 恢復原背景顏色
-          }, delay);
-        } else {
-          setTimeout(updateDice, intervalTime); // 更新下一跳
-        }
-      }
-
-      // 開始更新骰子
-      updateDice();
+    // 若到最後 5~10 次，讓間隔隨機減慢
+    if (currentFrame >= totalFrames - Math.floor(Math.random() * 6) - 5) {
+      intervalTime += Math.floor(Math.random() * 100) + 100; // 隨機增加 50~150 毫秒
     }
+
+    // 停止條件
+    if (currentFrame === totalFrames) {
+      displayFinalResult(); // 顯示最終結果
+
+      // **🟢 過 1 秒後重新啟用按鈕**
+      setTimeout(() => {
+        rollButton.disabled = false;
+        rollButton.style.opacity = "1"; // 讓按鈕恢復原本顏色
+        playStopSound(); // 播放停止音效
+        document.body.style.backgroundColor = "#ffffff"; // 恢復原背景顏色
+      }, 1000);
+    } else {
+      setTimeout(updateDice, intervalTime); // 更新下一跳
+    }
+  }
+
+  // **開始更新骰子**
+  updateDice();
+}
+
 
     function displayFinalResult() {
       // 顯示最終結果
